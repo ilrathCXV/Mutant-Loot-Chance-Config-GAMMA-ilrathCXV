@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<string_table>
+	<string id="ui_mcm_menu_mutant_loot_config">
+		<text>Mutant Loot</text>
+	</string>
+	<string id="ui_mcm_mutant_loot_config_title">
+		<text>Mutant Loot Configuration</text>
+	</string>
+	
+	<string id="ui_mcm_mutant_loot_config_enable_mod">
+		<text>Enable Mod?</text>
+	</string>
+	<string id="ui_mcm_mutant_loot_config_aenable_mod_desc">
+		<text>Turning this on will allow the below settings to take effect.</text>
+	</string>
+	
+	<string id="ui_mcm_mutant_loot_config_always_give_parts">
+		<text>Give All Mutant Parts?</text>
+	</string>
+	<string id="ui_mcm_mutant_loot_config_always_give_parts_desc">
+		<text>Turning this on will always give you all mutant parts in their loot table, regardless of chance.</text>
+	</string>
+	<string id="ui_mcm_mutant_loot_config_mutant_part_chance_mult">
+		<text>Mutant Parts Chance Multiplier</text>
+	</string>
+	<string id="ui_mcm_mutant_loot_config_mutant_part_chance_mult_desc">
+		<text>Multiplies the base drop chance of mutant parts by this value (1.2 * 50% = 60%).</text>
+	</string>
+	
+	<string id="ui_mcm_mutant_loot_config_always_give_meat">
+		<text>Give All Mutant Meat?</text>
+	</string>
+	<string id="ui_mcm_mutant_loot_config_always_give_meat_desc">
+		<text>Turning this on will always give you all mutant meat in their loot table, regardless of chance.</text>
+	</string>
+	<string id="ui_mcm_mutant_loot_config_mutant_meat_chance_mult">
+		<text>Mutant Meat Chance Multiplier</text>
+	</string>
+	<string id="ui_mcm_mutant_loot_config_mutant_meat_chance_mult_desc">
+		<text>Multiplies the base drop chance of mutant meat by this value (1.2 * 50% = 60%).</text>
+	</string>
+	
+	<string id="ui_mcm_mutant_loot_config_always_give_pelt">
+		<text>Give All Mutant Pelts?</text>
+	</string>
+	<string id="ui_mcm_mutant_loot_config_always_give_pelt_desc">
+		<text>Turning this on will always give you all mutant pelts in their loot table, regardless of chance.</text>
+	</string>
+	<string id="ui_mcm_mutant_loot_config_mutant_pelt_chance_mult">
+		<text>Mutant Pelts Chance Multiplier</text>
+	</string>
+	<string id="ui_mcm_mutant_loot_config_mutant_pelt_chance_mult_desc">
+		<text>Multiplies the base drop chance of mutant pelts by this value (1.2 * 50% = 60%).</text>
+	</string>
+	
+	<string id="ui_mcm_mutant_loot_config_mutant_other_chance_mult">
+		<text>Other Mutant Loot Chance Multiplier</text>
+	</string>
+	<string id="ui_mcm_mutant_loot_config_mutant_pelt_chance_mult_desc">
+		<text>Multiplies the base drop chance of other mutant loot not mentioned above by this value (1.2 * 50% = 60%).</text>
+	</string>
+	
+	<string id="ui_mcm_mutant_loot_config_failsafe_loot">
+		<text>Failsafe Loot?</text>
+	</string>
+	<string id="ui_mcm_mutant_loot_config_failsafe_loot_desc">
+		<text>Turning this on will guarantee you at least one item when looting mutants (if possible).</text>
+	</string>
+	
+	
+</string_table>
