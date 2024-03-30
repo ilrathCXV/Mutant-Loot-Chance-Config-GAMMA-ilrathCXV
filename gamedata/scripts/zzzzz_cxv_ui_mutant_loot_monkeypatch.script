@@ -1,0 +1,307 @@
+local ini_mutant = ini_file("items\\settings\\mutant_loot.ltx")
+local get_config = zzz_cxv_mutant_loot_mcm.get_config
+local mcm_defaults = zzz_cxv_mutant_loot_mcm.defaults
+local mcm_check = ui_mcm and zzz_cxv_mutant_loot_mcm
+
+is_cxv_enabled = get_config("enable_mod") or mcm_defaults["enable_mod"] or false
+
+hunting_kits = {
+	"kit_hunt",
+	"equ_small_military_hunt_pack",
+	"equ_military_hunt_pack",
+	"equ_tourist_hunt_pack",
+}
+
+-- Should specific loot be guaranteed?
+mutant_part_guaranteed = {
+	["i_mutant_part"] = get_config("always_give_parts") or mcm_defaults["always_give_parts"] or false,
+	["i_mutant_raw"] = get_config("always_give_meat") or mcm_defaults["always_give_meat"] or false,
+	["i_mutant_belt"] = get_config("always_give_pelt") or mcm_defaults["always_give_pelt"] or false,
+}
+
+
+-- Chance multiplier solely for mutant parts
+mutant_part_chance_mult = {
+	["i_mutant_part"] = get_config("mutant_part_chance_mult") or mcm_defaults["mutant_part_chance_mult"] or 1,
+	["i_mutant_raw"] = get_config("mutant_meat_chance_mult") or mcm_defaults["mutant_meat_chance_mult"] or 1,
+	["i_mutant_belt"] = get_config("mutant_pelt_chance_mult") or mcm_defaults["mutant_pelt_chance_mult"] or 1,
+}
+
+mutant_other_chance_mult = get_config("mutant_other_chance_mult") or mcm_defaults["mutant_other_chance_mult"] or 1
+
+function get_part_kind(sec)
+    local kind = sec and ini_sys:r_string_ex(sec,'kind') or nil
+    return kind
+end
+
+----------------------------------------------------------------------
+-- Monkeypatching time -----------------------------------------------
+----------------------------------------------------------------------
+
+function ui_mutant_loot.loot_mutant(section, clsid, loot_table, npc, dont_create, victim) -- Prepare mutant loot
+	
+	npc = npc or db.actor
+	local clsid = clsid or obj and obj:clsid()
+	local kind = section and ini_sys:r_string_ex(section,"kind") or "unknown"
+	if not (clsid) then
+		return
+	end
+
+	local loot, sec, count, chance
+	local str_explode = str_explode
+	local mutant = ui_mutant_loot.clsdbg_to_section[kind] or ui_mutant_loot.clsid_to_section[clsid]
+	local was_loot_given = false
+	local failsafe_loot = get_config("failsafe_loot") or mcm_defaults["failsafe_loot"] or false
+	
+	if victim:section() == "gigant_jumper" then
+		mutant = "gigant"
+	end
+	
+	local possible_items = utils_data.collect_section(ini_mutant, mutant)
+	
+	local sim = alife()
+	local npc_id = npc and npc:id()
+	local npc_pos = npc and npc:position()
+	local npc_lvl_id = npc and npc:level_vertex_id()
+	local npc_game_id = npc and npc:game_vertex_id()
+
+	-- Spawn items on NPC if he looted the mutant
+	for i=1,#possible_items do
+		loot = str_explode(possible_items[i],",")
+		if (loot and loot[1] and loot[2]) then
+			if (not loot[3]) then
+				loot[3] = 1
+			end
+			
+			sec = loot[1]
+			count = tonumber(loot[2])
+			
+			if is_cxv_enabled then
+				part_kind = get_part_kind(sec)
+				
+				if part_kind and mutant_part_guaranteed[part_kind] == true then
+					printf("[CXV Mutant Loot] %s will be guaranteed (%s)", sec, part_kind)
+					chance = 1
+				elseif part_kind and mutant_part_chance_mult[part_kind] then
+					printf("[CXV Mutant Loot] %s will have its chances increased by %sx (%s)", sec, mutant_part_chance_mult[part_kind], part_kind)
+					chance = (loot[3] and (loot[3] * mutant_part_chance_mult[part_kind])) or 1
+				else
+					printf("[CXV Mutant Loot] %s will have its chances increased by %sx (%s)", sec, mutant_other_chance_mult, part_kind)
+					chance = (loot[3] and (loot[3] * mutant_other_chance_mult)) or 1
+				end
+			else
+				printf("[CXV Mutant Loot] Mutant Loot MCM not enabled. Defaulting to normal drop chances...")
+				chance = loot[3] or 1
+			end
+			
+			for i=1,count do
+				if (math.random() <= tonumber(chance)) then
+					was_loot_given = true
+					-- In case we don't want to bother with loot table
+					local se_obj
+					if (not dont_create) then
+						se_obj = alife_create_item(sec, npc, ui_mutant_loot.item_prop_table)
+					end
+					
+					-- Fill loot table if needed
+					if (loot_table) then
+						local sec_d, uses = utils_item.get_defined_uses(sec)
+						if (not loot_table[sec_d]) then
+							loot_table[sec_d] = {}
+						end
+						local c = loot_table[sec_d].count
+						c = c and (c + 1) or 1
+						loot_table[sec_d].count = c
+						if se_obj then
+							loot_table[sec_d][c] = se_obj.id
+						end
+						--printf("loot_mutant")
+					end
+					
+				end
+			end
+		end
+	end
+	
+	if not was_loot_given and is_cxv_enabled and failsafe_loot then
+		printf("[CXV Mutant Loot] No loot was given. Attempting loot failsafe...")
+		loot = str_explode(possible_items[math.random(1,#possible_items)],",")
+		if (loot and loot[1] and loot[2]) then
+			if (not loot[3]) then
+				loot[3] = 1
+			end
+			
+			sec = loot[1]
+			count = tonumber(loot[2])
+		
+			if (not dont_create) then
+				se_obj = alife_create_item(sec, npc, ui_mutant_loot.item_prop_table)
+			end
+			
+			if (loot_table) then
+				local sec_d, uses = utils_item.get_defined_uses(sec)
+				if (not loot_table[sec_d]) then
+					loot_table[sec_d] = {}
+				end
+				local c = loot_table[sec_d].count
+				c = c and (c + 1) or 1
+				loot_table[sec_d].count = c
+				if se_obj then
+					loot_table[sec_d][c] = se_obj.id
+				end
+			end
+		end
+	end
+		
+	
+	-- Unlock relevant mutant article in guide.
+	if mutant and npc and (npc:id() == AC_ID) then
+		SendScriptCallback("actor_on_interaction", "mutants", nil, mutant)
+	end
+	
+	SendScriptCallback("monster_on_loot_init",victim,loot_table)
+end
+
+function on_option_change(mcm)
+	if mcm then
+		is_cxv_enabled = get_config("enable_mod") or mcm_defaults["enable_mod"] or false
+		
+		mutant_part_guaranteed = {
+			["i_mutant_part"] = get_config("always_give_parts") or mcm_defaults["always_give_parts"] or false,
+			["i_mutant_raw"] = get_config("always_give_meat") or mcm_defaults["always_give_meat"] or false,
+			["i_mutant_belt"] = get_config("always_give_pelt") or mcm_defaults["always_give_pelt"] or false,
+		}
+		
+		-- Chance multiplier solely for mutant parts
+		mutant_part_chance_mult = {
+			["i_mutant_part"] = get_config("mutant_part_chance_mult") or mcm_defaults["mutant_part_chance_mult"] or 1,
+			["i_mutant_raw"] = get_config("mutant_meat_chance_mult") or mcm_defaults["mutant_meat_chance_mult"] or 1,
+			["i_mutant_belt"] = get_config("mutant_pelt_chance_mult") or mcm_defaults["mutant_pelt_chance_mult"] or 1,
+		}
+		
+		mutant_other_chance_mult = get_config("mutant_other_chance_mult") or mcm_defaults["mutant_other_chance_mult"] or 1
+	end
+end
+
+function on_game_start()
+	RegisterScriptCallback("on_option_change",on_option_change)
+	on_option_change(mcm_check)
+end
+
+----------------------------------------------------------------------
+
+ui_mutant_loot.UIMutantLoot.Loot = function(self, loot_all)
+	local obj_mutant = level.object_by_id(self.id)
+	if (not obj_mutant) then
+		self:Close()
+		return
+	end
+	
+	local is_looted
+	local sim = alife()
+	local bonus_part_chance = 0
+	
+	-- Checking in case player has Hunting Backpacks Expanded
+	local is_huntkit
+	local needs_equipped_hk = ui_options.get("gameplay/general/need_equipped_hkit")
+	
+	if needs_equipped_hk then
+		local backpack = db.actor:item_in_slot(13)
+		if backpack then
+			backpack_sec = backpack:section()
+			bonus_part_chance = ini_sys:r_float_ex(backpack_sec,"bonus_mutant_part_chance") or 0
+			if bonus_part_chance > 0 then
+				is_huntkit = true
+			end
+		end
+	end
+	
+	-- Keeping the "Hunting Kit Equipped" option functional
+	if not is_huntkit and not needs_equipped_hk then
+		
+		-- Checking for all types of Hunting Kits
+		for i=1,#hunting_kits do
+			if db.actor:object(hunting_kits[i]) then
+				-- Checking in case a backpack with higher part chance is found (in case people add their own backpacks to the list)
+				local temp_chance = ini_sys:r_float_ex(hunting_kits[i],"bonus_mutant_part_chance") or 0
+				if temp_chance > bonus_part_chance then
+					bonus_part_chance = temp_chance
+					printf("[CXV Mutant Loot] New bonus mutant part chance (%s%) from %s", bonus_part_chance, hunting_kits[i])
+				end
+			end
+		end
+		
+	end
+	
+	-- Spawn selected items, clean from loot table
+	if loot_all then
+		local tbl = self.loot -- temp
+		for sec,t in pairs(tbl) do
+			for i=1,t.count do
+				is_looted = true
+				item_knife.degradate()
+				
+				alife_create_item(sec, db.actor, ui_mutant_loot.item_prop_table)
+
+				if is_huntkit and (math.random(100) < bonus_part_chance) then
+					alife_create_item(sec, db.actor, ui_mutant_loot.item_prop_table)
+				end
+				self.loot[sec].count = self.loot[sec].count - 1
+				if (self.loot[sec].count == 0) then
+					self.loot[sec] = nil
+				end
+			end
+		end
+	else
+		for idx,ci in pairs(self.CC.cell) do
+			if ci.flags.selected then
+				local sec = ci.section
+				is_looted = true
+				item_knife.degradate()
+				
+				alife_create_item(sec, db.actor, ui_mutant_loot.item_prop_table)
+
+				if is_huntkit and (math.random(100) < bonus_part_chance) then
+					alife_create_item(sec, db.actor, ui_mutant_loot.item_prop_table)
+				end
+				
+				self.loot[sec].count = self.loot[sec].count - 1
+				if self.loot[sec].count == 0 then
+					self.loot[sec] = nil
+				end
+			end
+		end
+	end
+	
+	-- If no item is looted, don't proceed
+	if (not is_looted) then
+		return
+	end
+	
+	-- Animation boost if player has Hunter Kit or Well Dressed Achievement
+	if (actor_effects) then
+		local boost = (game_achievements.has_achievement("well_dressed") and 1 or 0) + (is_huntkit and 1 or 0)
+		if (boost == 2) then
+			actor_effects.play_item_fx("mutant_looting_boost_2")
+		elseif (boost == 1) then
+			actor_effects.play_item_fx("mutant_looting_boost_1")
+		else
+			actor_effects.play_item_fx("mutant_looting")
+		end
+	end
+	xr_sound.set_sound_play(AC_ID,"inv_mutant_loot_animal")
+	
+	-- Increat field dressings stat
+	game_statistics.increment_statistic("field_dressings")
+	
+	-- Mutant post-state
+	save_var(obj_mutant,"loot",self.loot)
+	local is_more_loot = not is_empty(self.loot)
+	
+	-- Refill loot list if there's loot left
+	if ((not actor_effects.is_animations_on()) and is_more_loot) then
+		self:FillList()
+	else
+		self:Close()
+	end
+end

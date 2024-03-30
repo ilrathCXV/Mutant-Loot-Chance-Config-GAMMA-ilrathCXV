@@ -10,7 +10,7 @@
 	<string id="ui_mcm_mutant_loot_config_enable_mod">
 		<text>Enable Mod?</text>
 	</string>
-	<string id="ui_mcm_mutant_loot_config_aenable_mod_desc">
+	<string id="ui_mcm_mutant_loot_config_enable_mod_desc">
 		<text>Turning this on will allow the below settings to take effect.</text>
 	</string>
 	
