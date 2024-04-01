@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<string_table>
+	<string id="ui_mcm_menu_mutant_loot_config">
+		<text>Лут с мутантов</text>
+	</string>
+	<string id="ui_mcm_mutant_loot_config_title">
+		<text>Конфигурация лута с мутантов</text>
+	</string>
+	
+	<string id="ui_mcm_mutant_loot_config_enable_mod">
+		<text>Включить мод?</text>
+	</string>
+	<string id="ui_mcm_mutant_loot_config_aenable_mod_desc">
+		<text>Включение этого параметра позволит применить приведенные ниже настройки.</text>
+	</string>
+
+<string id="ui_mcm_mutant_loot_config_always_give_parts">
+    <text>Дать все части мутанта?</text>
+</string>
+<string id="ui_mcm_mutant_loot_config_always_give_parts_desc">
+    <text>Включение этого параметра всегда будет давать вам все части мутантов в таблице лута, независимо от рандома.</text>
+</string>
+<string id="ui_mcm_mutant_loot_config_mutant_part_chance_mult">
+    <text>Множитель шанса получения частей мутанта</text>
+</string>
+<string id="ui_mcm_mutant_loot_config_mutant_part_chance_mult_desc">
+    <text>Умножает базовый шанс выпадения частей мутанта на это значение (1,2 * 50% = 60%).</text>
+</string>
+
+<string id="ui_mcm_mutant_loot_config_always_give_meat">
+    <text>Дать мясо со всех мутантов?</text>
+</string>
+<string id="ui_mcm_mutant_loot_config_always_give_meat_desc">
+    <text>Включение этого параметра всегда будет давать вам все мясо мутантов в их таблице добычи, независимо от рандома.</text>
+</string>
+<string id="ui_mcm_mutant_loot_config_mutant_meat_chance_mult">
+    <text>Множитель шанса на мясо мутанта</text>
+</string>
+<string id="ui_mcm_mutant_loot_config_mutant_meat_chance_mult_desc">
+    <text>Умножает базовый шанс выпадения мутантного мяса на это значение (1,2 * 50% = 60%).</text>
+</string>
+
+<string id="ui_mcm_mutant_loot_config_always_give_pelt">
+    <text>Дать все шкуры мутантов?</text>
+</string>
+<string id="ui_mcm_mutant_loot_config_always_give_pelt_desc">
+    <text>Включение этого параметра всегда будет давать вам все шкуры мутантов в таблице добычи, независимо от рандома.</text>
+</string>
+<string id="ui_mcm_mutant_loot_config_mutant_pelt_chance_mult">
+    <text>Множитель шанса получить шкуры мутанта</text>
+</string>
+<string id="ui_mcm_mutant_loot_config_mutant_pelt_chance_mult_desc">
+    <text>Умножает базовый шанс выпадения мутантных шкур на это значение (1,2 * 50% = 60%).</text>
+</string>
+
+<string id="ui_mcm_mutant_loot_config_mutant_other_chance_mult">
+    <text>Множитель шанса добычи других частей мутантов</text>
+</string>
+<string id="ui_mcm_mutant_loot_config_mutant_pelt_chance_mult_desc">
+    <text>Умножает базовый шанс выпадения другой добычи с мутантов, не упомянутой выше, на это значение (1,2 * 50% = 60%).</text>
+</string>
+
+<string id="ui_mcm_mutant_loot_config_failsafe_loot">
+    <text>Гарантированная добыча?</text>
+</string>
+<string id="ui_mcm_mutant_loot_config_failsafe_loot_desc">
+    <text>Включение этого параметра гарантирует вам наличие хотя бы одного предмета при добыче мутантов (если это возможно).</text>
+</string>
+</string_table>
