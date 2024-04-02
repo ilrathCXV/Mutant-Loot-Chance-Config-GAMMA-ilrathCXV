@@ -56,7 +56,7 @@
 <string id="ui_mcm_mutant_loot_config_mutant_other_chance_mult">
     <text>Множитель шанса добычи других частей мутантов</text>
 </string>
-<string id="ui_mcm_mutant_loot_config_mutant_pelt_chance_mult_desc">
+<string id="ui_mcm_mutant_loot_config_mutant_other_chance_mult_desc">
     <text>Умножает базовый шанс выпадения другой добычи с мутантов, не упомянутой выше, на это значение (1,2 * 50% = 60%).</text>
 </string>
 
