@@ -230,6 +230,7 @@ ui_mutant_loot.UIMutantLoot.Loot = function(self, loot_all)
 				local temp_chance = ini_sys:r_float_ex(hunting_kits[i],"bonus_mutant_part_chance") or 0
 				if temp_chance > bonus_part_chance then
 					bonus_part_chance = temp_chance
+					is_huntkit = true
 					printf("[CXV Mutant Loot] New bonus mutant part chance (%s%) from %s", bonus_part_chance, hunting_kits[i])
 				end
 			end
