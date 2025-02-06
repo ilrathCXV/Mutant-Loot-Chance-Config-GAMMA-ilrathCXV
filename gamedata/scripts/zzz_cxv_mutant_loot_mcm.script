@@ -20,12 +20,12 @@ function on_mcm_load()
 			{ id = "title", type = "slide", link = "ui_options_slider_player", text = "ui_mcm_mutant_loot_config_title", size = { 512, 50 }, spacing = 20 },
 			{id = "enable_mod", 		  	  type = "check", val = 1, 								  def = false},
 			{ id = "always_give_parts", 	  type = "check", val = 1, 								  def = false},
-			{ id = "mutant_part_chance_mult", type = "track", val = 2, min = 1, max = 5, step = 0.1, def = 1 },
+			{ id = "mutant_part_chance_mult", type = "track", val = 2, min = 0, max = 5, step = 0.1, def = 1 },
 			{ id = "always_give_meat", 		  type = "check", val = 1, 								  def = false},
-			{ id = "mutant_meat_chance_mult", type = "track", val = 2, min = 1, max = 5, step = 0.1, def = 1 },
+			{ id = "mutant_meat_chance_mult", type = "track", val = 2, min = 0, max = 5, step = 0.1, def = 1 },
 			{ id = "always_give_pelt", 		  type = "check", val = 1, 								  def = false},
-			{ id = "mutant_pelt_chance_mult", type = "track", val = 2, min = 1, max = 5, step = 0.1, def = 1 },
-			{ id = "mutant_other_chance_mult", type = "track", val = 2, min = 1, max = 3, step = 0.1, def = 1 },
+			{ id = "mutant_pelt_chance_mult", type = "track", val = 2, min = 0, max = 5, step = 0.1, def = 1 },
+			{ id = "mutant_other_chance_mult", type = "track", val = 2, min = 0, max = 3, step = 0.1, def = 1 },
 			{id = "failsafe_loot", 		  	  type = "check", val = 1, 								  def = false},
 		}
 	}
