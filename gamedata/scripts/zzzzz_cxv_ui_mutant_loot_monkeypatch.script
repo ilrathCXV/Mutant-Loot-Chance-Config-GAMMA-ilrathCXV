@@ -125,24 +125,27 @@ function ui_mutant_loot.loot_mutant(section, clsid, loot_table, npc, dont_create
 			sec = loot[1]
 			count = tonumber(loot[2])
 			chance = loot[3] or 1
-			
-			if is_huntkit then
-				chance = chance + chance * (bonus_part_chance/100)
-			end
+			local new_chance
 			
 			if is_cxv_enabled then
 				part_kind = get_part_kind(sec)
 				
 				if part_kind and mutant_part_guaranteed[part_kind] == true then
 					-- printf("[CXV Mutant Loot] %s will be guaranteed (%s)", sec, part_kind)
-					chance = 1
+					new_chance = 1
 				elseif part_kind and mutant_part_chance_mult[part_kind] then
 					-- printf("[CXV Mutant Loot] %s will have its chances increased by %sx (%s)", sec, mutant_part_chance_mult[part_kind], part_kind)
-					chance = chance * mutant_part_chance_mult[part_kind]
+					new_chance = chance * mutant_part_chance_mult[part_kind]
 				else
 					-- printf("[CXV Mutant Loot] %s will have its chances increased by %sx (%s)", sec, mutant_other_chance_mult, part_kind)
-					chance = chance * mutant_other_chance_mult
+					new_chance = chance * mutant_other_chance_mult
 				end
+			end
+			
+			if is_huntkit then
+				chance = new_chance + chance * (bonus_part_chance/100)
+			else
+				chance = new_chance
 			end
 			
 			for i=1,count do
@@ -184,7 +187,7 @@ function ui_mutant_loot.loot_mutant(section, clsid, loot_table, npc, dont_create
 			count = tonumber(loot[2])
 		
 			if (not dont_create) then
-				se_obj = alife_create_item(sec, npc, ui_mutant_loot.item_prop_table)
+				se_obj = ui_mutant_loot.alife_create_item(sec, npc, ui_mutant_loot.item_prop_table)
 			end
 			
 			if (loot_table) then
@@ -300,10 +303,10 @@ ui_mutant_loot.UIMutantLoot.Loot = function(self, loot_all)
 				is_looted = true
 				item_knife.degradate()
 				
-				alife_create_item(sec, db.actor, ui_mutant_loot.item_prop_table)
+				ui_mutant_loot.alife_create_item(sec, db.actor, ui_mutant_loot.item_prop_table)
 
 --				if is_huntkit and (math.random(100) < bonus_part_chance) then
---					alife_create_item(sec, db.actor, ui_mutant_loot.item_prop_table)
+--					ui_mutant_loot.alife_create_item(sec, db.actor, ui_mutant_loot.item_prop_table)
 --				end
 				self.loot[sec].count = self.loot[sec].count - 1
 				if (self.loot[sec].count == 0) then
@@ -318,10 +321,10 @@ ui_mutant_loot.UIMutantLoot.Loot = function(self, loot_all)
 				is_looted = true
 				item_knife.degradate()
 				
-				alife_create_item(sec, db.actor, ui_mutant_loot.item_prop_table)
+				ui_mutant_loot.alife_create_item(sec, db.actor, ui_mutant_loot.item_prop_table)
 
 --				if is_huntkit and (math.random(100) < bonus_part_chance) then
---					alife_create_item(sec, db.actor, ui_mutant_loot.item_prop_table)
+--					ui_mutant_loot.alife_create_item(sec, db.actor, ui_mutant_loot.item_prop_table)
 --				end
 				
 				self.loot[sec].count = self.loot[sec].count - 1
